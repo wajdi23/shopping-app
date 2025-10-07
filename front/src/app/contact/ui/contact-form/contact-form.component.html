@@ -1,0 +1,49 @@
+<div class="contact-container">
+  <div class="contact-card">
+    <h1>Formulaire de contact</h1>
+    @if (successMessage()) {
+    <p-messages pRipple severity="success" [value]="successMessage()!" styleClass="w-full mb-4"></p-messages>
+    }
+
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmitContactForm()">
+      <div class="form-field mb-3">
+        <label for="email" class="block mb-1">Email</label>
+        <input pInputText id="email" type="email" formControlName="email" placeholder="votre@email.com" class="w-full"
+          [class.ng-invalid]="contactForm.get('email')?.invalid && contactForm.get('email')?.touched"
+          [class.ng-dirty]="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" />
+        @if (contactForm.get('email')?.invalid && contactForm.get('email')?.touched) {
+        <small class="p-error block mt-1">
+          L'Email est requis et doit être valide
+        </small>
+        }
+      </div>
+
+      <!-- Champ Message -->
+      <div class="form-field mb-3">
+        <label for="message" class="block mb-1">Message
+          <span class="char-count">({{ messageLength }}/300)</span>
+        </label>
+        <textarea pInputTextarea id="message" formControlName="message" rows="5" maxlength="300"
+          placeholder="Saisissez votre message ici..."
+          [class.ng-invalid]="contactForm.get('message')?.invalid && contactForm.get('message')?.touched"
+          [class.ng-dirty]="contactForm.get('message')?.touched"></textarea>
+        @if (contactForm.get('message')?.invalid && contactForm.get('message')?.touched) {
+        <small class="p-error block mt-1">
+          @if (contactForm.get('message')?.errors?.['required']) {
+          Le message est requis
+          } @else if (contactForm.get('message')?.errors?.['maxlength']) {
+          Le message ne doit pas dépasser 300 caractères
+          }
+        </small>
+        }
+      </div>
+
+      <!-- Bouton Submit -->
+      <div class="flex gap-3 justify-content-center">
+        <p-button type="submit" label="Envoyer le message" icon="pi pi-send" severity="success"
+          [disabled]="contactForm.invalid" [loading]="isSubmitting()" />
+
+      </div>
+    </form>
+  </div>
+</div>

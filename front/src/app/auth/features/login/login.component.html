@@ -1,0 +1,65 @@
+<div class="user-menu">
+    @if(isAuthenticated()) {
+    <div class="inline text-sm text-600 mr-2">
+        Bonjour {{ currentUser()?.email }}
+    </div>
+    <button pButton icon="pi pi-sign-out" class="p-button-danger" (click)="logout(userPanel)"></button>
+    } @else {
+    <div class="inline text-sm text-600 mr-2 cursor-pointer" (click)="userPanel.toggle($event)">
+        Veuillez vous connecter
+    </div>
+    }
+    <i class="pi pi-user text-3xl cursor-pointer" class="btn-red" (click)="userPanel.toggle($event)"
+        tooltipPosition="bottom" [pTooltip]="'Se connecter'">
+    </i>
+
+    <p-overlayPanel #userPanel [style]="{ width: '350px' }">
+
+
+
+        <ng-container *ngIf="!isAuthenticated()">
+            <div class="login-form p-3">
+                <form [formGroup]="loginForm" (ngSubmit)="onLogin(userPanel)">
+                    <div class="form-field mb-3">
+                        <label for="email" class="block mb-2">Email</label>
+                        <input pInputText id="email" type="email" formControlName="email" placeholder="votre@email.com"
+                            class="w-full" aria-labelledby="email"
+                            [class.ng-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                            [class.ng-dirty]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
+                        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                        <small class="p-error block mt-1">
+                            L'Email est requis et doit être valide
+                        </small>
+                        }
+                    </div>
+
+                    <div class="field mb-3">
+                        <label for="password" class="block mb-2">Mot de passe</label>
+                        <input pInputText id="password" formControlName="password" placeholder="Mot de passe"
+                            class="w-full" type="password" aria-labelledby="password"
+                            [class.ng-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                            [class.ng-dirty]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
+
+
+                        @if (loginForm.get('password')?.invalid &&
+                        loginForm.get('password')?.touched) {
+                        <small class="p-error block mt-1">
+                            Le mot de passe requis
+                        </small>
+                        }
+                    </div>
+
+                    @if (loginError()) {
+                    <div class="w-full p-text-error py-1 ">
+                        <i class="pi pi-exclamation-triangle"></i>
+                        Veuillez vérifier vos informations
+                    </div>
+                    }
+
+                    <button pButton type="submit" label="Se connecter" icon="pi pi-sign-in" class="w-full"
+                        [disabled]="loginForm.invalid"></button>
+                </form>
+            </div>
+        </ng-container>
+    </p-overlayPanel>
+</div>
